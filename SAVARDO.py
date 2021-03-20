@@ -8,34 +8,28 @@ pygame.display.set_caption('SPAWN')
 black = (0,0,0)
 
 white = (255,255,255) 
-carImg = pygame.image.load('jojo.jpg')
-ship = pygame.image.load("yamoto.png")
-Ball_Img = pygame.image.load('ball.png')
+PersomImg = pygame.image.load('fon.jpg')
+fon = pygame.image.load("fon.jpg")
+bullet_Img = pygame.image.load('fon.png')
 
-# ship_top = gameDisplay.get_height() - ship.get_height()
-# ship_left = gameDisplay.get_width()/2 - ship.get_width()/2
+# fon_top = gameDisplay.get_height() - fon.get_height()
+# fon_left = gameDisplay.get_width()/2 - fon.get_width()/2
 x =  (display_width * 0.45)
 y = (display_height * 0.8)	#1
-x_ball =(display_width * 0.45)
-y_ball =(display_height * 0.4)
+x_bullet =[]
+y_bullet =[]
 x_change = 0
-y_change = 0
-ball_x_change = 0
-ball_y_change = 0
-#spawn = False
-car_speed = 0
-ball_speed = 0
+spawn = False
+# PersomImg_speed = 0
+# bullet_speed = 0
 
+gameDisplay.blit(fon, (123,100))
 
-gameDisplay.blit(ship, (123,100))
+def Persom(x,y): 
+    gameDisplay.blit(PersomImg, (x,y))
 
-def car(x,y): 
-    gameDisplay.blit(carImg, (x,y))
-
-def Ball(x,y):
-    gameDisplay.blit(Ball_Img, (x,y))
-
-gameDisplay.blit(carImg,(400,550)) 
+def bullet(x,y):
+    gameDisplay.blit(bullet_Img, (x,y))
 
 clock = pygame.time.Clock()
 
@@ -49,23 +43,24 @@ while not crashed:
                 x_change = -5
             elif event.key == pygame.K_RIGHT:
                 x_change = 5
-            elif event.key == pygame.K_UP:
-                y_change = -5
-            elif event.key == pygame.K_DOWN:
-                y_change = 5
             elif ebent.key == pygame.K_SPACE:
                spawn = True
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 x_change = 0
-            elif event.key == pygame.K_UP:
-                y_change = 0
-            elif event.key == pygame.K_DOWN:
-                y_change = 
         ######################
-    if spawn 
+    if spawn == True:
+        x_bullet.append(x) 
+        y_bullet.append(y)
+        spawn = False 
     x=x+x_change
-    y=y+y_change
-    car(x,y)
+    Persom(x,y)
+    for i in range(len (y_bullet)):
+        y_bullet[i] -=2 
+        if y_bullet[i]< 0:
+            del(y_bullet [i])
+            del(x_bullet [i])
+        else:
+            bullet(x_bullet[i],y_bullet[i]) 
     pygame.display.update()
     clock.tick(60)
