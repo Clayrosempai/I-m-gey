@@ -1,15 +1,16 @@
 import pygame
 import random
+import time
 pygame.init()
 display_width = 1000
-display_height = 700
+display_height = 600
 
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('SPAWN')
 black = (0,0,0)
 
 white = (255,255,255) 
-PersomImg = pygame.image.load('hero.jpg')
+PersomImg = pygame.image.load('hero.png')
 fon = pygame.image.load("fon.jpg")
 bullet_Img = pygame.image.load('bullet.png')
 zombi_Img = pygame.image.load('ZOMBI.png')
@@ -42,8 +43,8 @@ def zombi(x,y):
 clock = pygame.time.Clock()
 
 crashed = False 
+start_time = time.time()
 
-start_time = pygame.time.get_ticks()
 while not crashed: 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -56,40 +57,44 @@ while not crashed:
                 x_change = 10
             elif event.key == pygame.K_SPACE:
                spawn = True
-            elif event.key == pygame.K_v:
+            elif event.key == pygame.K_LSHIFT:
                 spawn_left = True
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 x_change = 0
-        #####################
-    
-    # if pygame.time.get_ticks()-start_time >2:
-    #     x_zombi.append(random.randint(0,display_width))
-    #     y_zombi.append(0)
-    #     start_time = pygame.time.get_ticks()
-    # for i in range(len (y_zombi)):
-    #     y_zombi[i] +=2  
-    #     if y_zombi[i]< 0:
-    #         del(y_zombi [i])
-    #         del(x_zombi [i])
-    #         break
-    #     else:
-    #         zombi(x_zombi[i], y_zombi[i])
+        ####################
+    gameDisplay.fill(white)
+    gameDisplay.blit(fon, (display_width * 0.2,0))
+    if time.time()-start_time >2:
+        x_zombi.append(random.randint(0.2 * display_width,display_width * 0.9))
+        y_zombi.append(0)
+        start_time = time.time()
+    for i in range(len (y_zombi)):
+        y_zombi[i] +=2  
+        if y_zombi[i]> display_height:
+            del(y_zombi [i])
+            del(x_zombi [i])
+            break
+        else:
+            zombi(x_zombi[i], y_zombi[i])
         
         
     if spawn == True:
-        x_bullet.append(x+200) 
+        x_bullet.append(x+130) 
         y_bullet.append(y)
         spawn = False 
     if spawn_left == True:
-        x_bullet.append(x+100) 
+        x_bullet.append(x+25) 
         y_bullet.append(y)
         spawn_left = False 
-    gameDisplay.fill(white)
 
-    gameDisplay.blit(fon, (display_width * 0.2,0))
-    gameDisplay.blit(bullet_Img, (123,100))
+    
+    
     x=x+x_change
+    if x < 0.2 * display_width:
+        x = 0.2 * display_width
+    elif x > 0.9 * display_width:
+        x = 0.9 * display_width
     Persom(x,y)
     for i in range(len (y_bullet)):
          y_bullet[i] -=10 
@@ -99,6 +104,18 @@ while not crashed:
             del(x_bullet [i])
             break
         else:
-            bullet(x_bullet[i],y_bullet[i]) 
+            bullet(x_bullet[i],y_bullet[i])
+    fed = False
+    for c in range(len (y_zombi)):
+        for i in range(len (y_bullet)):
+            if abs(x_zombi[c]+23-x_bullet[i]-123)<=125+123 and abs(y_zombi[c]+23-y_bullet[i] -100)<=23+123:
+                del(y_zombi [c])
+                del(x_zombi [c])
+                del(y_bullet [i])
+                del(x_bullet [i])
+                fed = True 
+                break
+        if fed == True:
+            break
     pygame.display.update()
     clock.tick(60)
